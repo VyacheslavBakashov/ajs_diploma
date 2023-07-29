@@ -68,6 +68,20 @@ export default class GameController {
     } else if (charIntoCell) {
       GamePlay.showError('Это персонаж противника');
     }
+
+    // movement
+    const currentChar = this.gameState.selectedChar;
+    const checkMoveCells = currentChar.moveCells.includes(index);
+
+    if (currentChar && !charIntoCell && checkMoveCells) {
+      const prevPosition = currentChar.position;
+      this.gamePlay.deselectCell(prevPosition);
+      currentChar.position = index;
+      this.gamePlay.selectCell(currentChar.position);
+
+      this.gameState.getRangesForChar();
+      this.gamePlay.redrawPositions(this.gameState.charsPositioned);
+    }
   }
 
   onCellEnter(index) {
@@ -98,7 +112,6 @@ export default class GameController {
   onCellLeave(index) {
     // const charIntoCell = this.checkCharIntoCell(index);
     const selChar = this.gameState.selectedChar;
-    const pos = selChar ? selChar.position : null;
     if (selChar && selChar.position !== index) {
       this.gamePlay.deselectCell(index);
     }
