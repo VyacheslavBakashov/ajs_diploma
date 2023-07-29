@@ -1,4 +1,4 @@
-import { calcHealthLevel, calcTileType } from './utils';
+import { calcHealthLevel, calcTileType, createBoard } from './utils';
 import { boardSize } from './constants';
 
 export default class GamePlay {
@@ -195,6 +195,11 @@ export default class GamePlay {
     const cell = this.cells[index];
     cell.classList.remove(...Array.from(cell.classList)
       .filter((o) => o.startsWith('selected')));
+  }
+
+  deselectAllCells() {
+    const board = createBoard(this.boardSize);
+    board.map((cell) => this.deselectCell(cell));
   }
 
   showCellTooltip(message, index) {

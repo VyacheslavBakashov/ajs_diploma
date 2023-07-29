@@ -37,6 +37,9 @@ export default class GameController {
 
     this.gameState.charsPositioned = charsAtPosinions;
 
+    this.gameState.resetToInitial();
+    this.gamePlay.deselectAllCells();
+
     compTeam.characters.forEach((char, index) => {
       this.gameState.charsPositioned.push(new PositionedCharacter(char, compPos[index]));
     });
@@ -94,7 +97,12 @@ export default class GameController {
 
   onCellLeave(index) {
     // const charIntoCell = this.checkCharIntoCell(index);
-    this.gamePlay.deselectCell(index);
+    const selChar = this.gameState.selectedChar;
+    const pos = selChar ? selChar.position : null;
+    if (selChar && selChar.position !== index) {
+      this.gamePlay.deselectCell(index);
+    }
+
     // if (charIntoCell) {
     //   this.gamePlay.hideCellTooltip(index);
     // } else {
