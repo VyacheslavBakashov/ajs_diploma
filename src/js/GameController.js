@@ -47,6 +47,8 @@ export default class GameController {
       this.gameState.charsPositioned.push(new PositionedCharacter(char, userPos[index]));
     });
     this.gamePlay.redrawPositions(this.gameState.charsPositioned);
+
+    this.gameState.userTurn = true;
   }
 
   onNewGameClick() {
@@ -57,6 +59,11 @@ export default class GameController {
     const prevChar = this.gameState.selectedChar;
     const charIntoCell = this.checkCharIntoCell(index);
 
+    if (!this.gameState.selectedChar && !GameController.isAlly(charIntoCell)) {
+      GamePlay.showError('Это персонаж противника');
+      return;
+    }
+
     if (GameController.isAlly(charIntoCell)) {
       if (prevChar) {
         this.gamePlay.deselectCell(prevChar.position);
@@ -66,21 +73,15 @@ export default class GameController {
       this.gameState.selectedChar = charIntoCell;
       this.gameState.getRangesForChar();
     } else if (charIntoCell) {
-      GamePlay.showError('Это персонаж противника');
+      this.attackAction(charIntoCell, index);
+      // GamePlay.showError('attack');
     }
 
     // movement
     const currentChar = this.gameState.selectedChar;
-    const checkMoveCells = currentChar.moveCells.includes(index);
 
-    if (currentChar && !charIntoCell && checkMoveCells) {
-      const prevPosition = currentChar.position;
-      this.gamePlay.deselectCell(prevPosition);
-      currentChar.position = index;
-      this.gamePlay.selectCell(currentChar.position);
-
-      this.gameState.getRangesForChar();
-      this.gamePlay.redrawPositions(this.gameState.charsPositioned);
+    if (currentChar && !charIntoCell) {
+      this.moveAction(currentChar, index);
     }
   }
 
@@ -121,6 +122,66 @@ export default class GameController {
     // } else {
     //   this.gamePlay.deselectCell(index);
     // }
+  }
+
+  // attackLogic() {
+
+  // }
+
+  attackAction(target, index) {
+    const attacker = this.gameState.selectedChar.character;
+    const attackRange = this.gameState.selectedChar.attackCells;
+    if (attackRange.includes(index)) {
+      const charTarget = target.character;
+      const damage = Math.max(attacker.attack - charTarget.defence, attacker.attack * 0.1);
+
+      charTarget.health -= damage;
+      this.checkAlive(target);
+      this.nextTurn();
+      // console.log(charTarget.health);
+    }
+  }
+
+  moveAction(currentCharacter, index) {
+    const checkMoveCells = currentCharacter.moveCells.includes(index);
+    if (checkMoveCells) {
+      const prevPosition = currentCharacter.position;
+      this.gamePlay.deselectCell(prevPosition);
+      currentCharacter.position = index;
+      // this.gamePlay.selectCell(currentCharacter.position);
+
+      this.gameState.getRangesForChar();
+      this.gamePlay.redrawPositions(this.gameState.charsPositioned);
+
+      // end movement of user
+      // this.gameState.userTurn = false;
+      // this.gamePlay.deselectAllCells();
+      // this.gameState.selectedChar = null;
+      this.nextTurn();
+    }
+  }
+
+  nextTurn() {
+    this.gameState.userTurn = !this.gameState.userTurn;
+    this.gamePlay.deselectAllCells();
+    this.gameState.selectedChar = null;
+    // console.log(this.gameState.userTurn);
+  }
+
+  // comp turn
+
+  getCompCharacters() {
+    const compChars = this.gameState.charsPositioned.filter((char) => !GameController.isAlly(char));
+    return compChars;
+  }
+
+  // check character health and delete him from board if health less than 0
+  checkAlive(target) {
+    const chars = this.gameState.charsPositioned;
+    if (target.character.health <= 0) {
+      this.gameState.charsPositioned = chars.filter((elm) => elm.position !== target.position);
+    }
+    this.gamePlay.redrawPositions(this.gameState.charsPositioned);
   }
 
   checkCharIntoCell(index) {

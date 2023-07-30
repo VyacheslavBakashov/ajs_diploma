@@ -1,4 +1,5 @@
 import { getMoveCells, getAttackCells } from './utils';
+import { generateTeam } from './generators';
 
 export default class GameState {
   constructor() {
