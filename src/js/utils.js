@@ -71,11 +71,13 @@ export function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-export function getStartPositions(arr, count) {
+export function getRandomPositions(allowedPositions, count, existingPositions = []) {
   const positions = new Set();
   while (positions.size < count) {
-    const randIndex = getRandomInt(arr.length);
-    positions.add(arr[randIndex]);
+    const randIndex = getRandomInt(allowedPositions.length);
+    if (!existingPositions.includes(allowedPositions[randIndex])) {
+      positions.add(allowedPositions[randIndex]);
+    }
   }
   return Array.from(positions);
 }
@@ -133,4 +135,8 @@ export function getMoveCells(charPosinioned, size = 8) {
   }
   cellsArr.splice(cellsArr.indexOf(position), 1);
   return cellsArr;
+}
+
+export function forNumSort(a, b) {
+  return a - b;
 }

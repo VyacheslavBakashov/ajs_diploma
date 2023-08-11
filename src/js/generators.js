@@ -24,14 +24,15 @@ export function* characterGenerator(allowedTypes, maxLevel) {
  * @param allowedTypes массив классов
  * @param maxLevel максимальный возможный уровень персонажа
  * @param characterCount количество персонажей, которое нужно сформировать
+ * @param userTeam принадлежность команды, true по умолчанию (для user)
  * @returns экземпляр Team, хранящий экземпляры персонажей.
  * Количество персонажей в команде - characterCount
  * */
-export function generateTeam(allowedTypes, maxLevel, characterCount) {
+export function generateTeam(allowedTypes, maxLevel, characterCount, userTeam = true) {
   const chars = [];
   const charsGenerator = characterGenerator(allowedTypes, maxLevel);
   for (let i = 0; i < characterCount; i++) {
     chars.push(charsGenerator.next().value);
   }
-  return new Team(chars);
+  return new Team(chars, userTeam);
 }

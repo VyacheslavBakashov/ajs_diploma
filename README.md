@@ -1,3 +1,7 @@
+![CI](https://github.com/VyacheslavBakashov/ajs_diploma/actions/workflows/web.yml/badge.svg)
+
+[AJS Diploma](https://VyacheslavBakashov.github.io/ajs_diploma/)
+
 # Дипломное задание к курсу «Продвинутый JavaScript». Retro Game
 
 ###### tags: `netology` `advanced js`

@@ -7,5 +7,6 @@ export default class Magician extends Character {
     this.defence = 40;
     this.movementRange = 1;
     this.attackRange = 4;
+    this.levelUp(level);
   }
 }

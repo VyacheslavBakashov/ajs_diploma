@@ -8,8 +8,16 @@ import Vampire from './characters/Vampire';
 export const boardSize = 8;
 export const charsUser = [Bowman, Swordsman, Magician];
 export const charsComp = [Daemon, Undead, Vampire];
-export const typesUser = ['bowman', 'swordsman', 'magician'];
-export const typesComp = ['daemon', 'undead', 'vampire'];
+export const charsUserByType = { bowman: Bowman, swordsman: Swordsman, magician: Magician };
+export const charsCompByType = { daemon: Daemon, undead: Undead, vampire: Vampire };
+export const charsByType = {
+  bowman: Bowman,
+  swordsman: Swordsman,
+  magician: Magician,
+  daemon: Daemon,
+  undead: Undead,
+  vampire: Vampire,
+};
 
 // const startUserPositions = [...Array(boardSize).keys()].map((elm) => elm * boardSize);
 const startUserPositions = [];

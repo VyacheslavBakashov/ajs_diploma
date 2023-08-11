@@ -14,14 +14,31 @@
  */
 export default class Character {
   constructor(level, type = 'generic') {
-    this.level = level;
+    this.level = 1;
     this.attack = 0;
     this.defence = 0;
     this.health = 50;
     this.type = type;
-    // TODO: выбросите исключение, если кто-то использует "new Character()"
+
     if (new.target.name === 'Character') {
       throw new Error('new Character() is not allowed');
     }
+  }
+
+  levelUp(level) {
+    const prevLevel = this.level;
+
+    if (level > 1) {
+      for (let i = prevLevel; i < level; i++) {
+        this.level++;
+        this.attack = this.#levelUpProp(this.attack);
+        this.defence = this.#levelUpProp(this.defence);
+        this.health = Math.min(100, this.health + 80);
+      }
+    }
+  }
+
+  #levelUpProp(prop) {
+    return Math.round(Math.max(prop, prop * ((this.health + 80) / 100)), 0);
   }
 }
